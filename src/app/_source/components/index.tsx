@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import NameAndTitle from "./welcome/NameAndTitle";
-import Nav from "./nav/Nav";
-import { ScreenComponents } from "../types/type";
-import Home from "./screens/home/Home";
-import Skills from "./screens/skills/Skills";
-import AboutMe from "./screens/aboutMe/AboutMe";
-import MyProjects from "./screens/myProjects/MyProjects";
+import { useState } from 'react';
+import NameAndTitle from './welcome/NameAndTitle';
+import Nav from './nav/Nav';
+import { ScreenComponents } from '../types/type';
+import Home from './screens/home/Home';
+import Skills from './screens/skills/Skills';
+import AboutMe from './screens/aboutMe/AboutMe';
+import MyProjects from './screens/myProjects/MyProjects';
 
 export interface TransitioningOut {
   exiting: boolean;
@@ -31,37 +31,33 @@ const ControllerContainer = () => {
   const [isPassInitialScreen, setIsPassInitialScreen] =
     useState<boolean>(false);
 
-  const [currentState, setCurrentState] = useState<ScreenComponents>("home");
+  const [currentState, setCurrentState] = useState<ScreenComponents>('home');
   const [transitioningOut, setTransitioningOut] = useState<TransitioningOut>({
     exiting: false,
     to: currentState,
   });
-  console.log(currentState);
+
   const CurrentComponent = screenComponents[currentState];
   return (
     <>
-      {!isPassInitialScreen ? (
-        <NameAndTitle setIsPassInitialScreen={setIsPassInitialScreen} />
-      ) : (
-        <div className="max-w-screen-xl mx-auto">
-          <Nav
-            setTransitioningOut={setTransitioningOut}
-            currentState={currentState}
+      <div className="max-w-screen-xl mx-auto">
+        <Nav
+          setTransitioningOut={setTransitioningOut}
+          currentState={currentState}
+        />
+        <div className="pt-40 pb-4">
+          <CurrentComponent
+            transitioningOut={transitioningOut}
+            onExitComplete={() => {
+              setCurrentState(transitioningOut.to);
+              setTransitioningOut({
+                ...transitioningOut,
+                exiting: false,
+              });
+            }}
           />
-          <div className="pt-40 pb-4">
-            <CurrentComponent
-              transitioningOut={transitioningOut}
-              onExitComplete={() => {
-                setCurrentState(transitioningOut.to);
-                setTransitioningOut({
-                  ...transitioningOut,
-                  exiting: false,
-                });
-              }}
-            />
-          </div>
         </div>
-      )}
+      </div>
     </>
   );
 };
