@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import NameAndTitle from './welcome/NameAndTitle';
 import Nav from './nav/Nav';
 import { ScreenComponents } from '../types/type';
 import Home from './screens/home/Home';
@@ -28,8 +27,6 @@ const screenComponents: Record<
   myProjects: MyProjects,
 };
 const ControllerContainer = () => {
-  const [isPassInitialScreen, setIsPassInitialScreen] =
-    useState<boolean>(false);
 
   const [currentState, setCurrentState] = useState<ScreenComponents>('home');
   const [transitioningOut, setTransitioningOut] = useState<TransitioningOut>({
