@@ -19,6 +19,7 @@ const NavItem = ({
 }: Props) => {
   const itemRef = useRef<HTMLDivElement>(null);
   const circleRef = useRef<SVGCircleElement>(null);
+  const isActive = currentState === id;
   const { contextSafe } = useGSAP();
 
   const handleClick = contextSafe(() => {
@@ -32,6 +33,7 @@ const NavItem = ({
   useGSAP(
     (_, contextSafe) => {
       if (!contextSafe) return;
+      if (isActive) return; // active 탭은 hover 효과 없이 항상 채워진 상태
 
       const tl = gsap.timeline({ paused: true });
       tl.fromTo(
@@ -60,14 +62,14 @@ const NavItem = ({
         itemRef.current?.removeEventListener("mouseleave", handleMouseLeave);
       };
     },
-    { scope: itemRef }
+    { scope: itemRef, dependencies: [isActive] }
   );
 
   return (
     <div
       onClick={handleClick}
       ref={itemRef}
-      className="mr-0 md:mr-5 h-20 w-20 md:h-32 md:w-32 rounded-full flex items-center justify-center cursor-pointer relative"
+      className={`mr-0 md:mr-5 h-20 w-20 md:h-32 md:w-32 rounded-full flex items-center justify-center relative ${isActive ? "cursor-default" : "cursor-pointer"}`}
     >
       <svg className=" absolute h-full w-full " transform="rotate(-90)">
         <circle
@@ -90,9 +92,13 @@ const NavItem = ({
           fill="none"
           stroke="#FFFFFF"
           strokeWidth="2"
+          strokeDasharray={isActive ? undefined : 400}
+          strokeDashoffset={isActive ? undefined : 400}
         ></circle>
       </svg>
-      <span className="px-1 text-sm md:text-base text-center">{children}</span>
+      <span className={`px-1 text-sm md:text-base text-center font-medium ${isActive ? "text-white" : "text-gray-400"}`}>
+        {children}
+      </span>
     </div>
   );
 };
